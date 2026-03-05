@@ -10,15 +10,15 @@ using namespace std;
 
 class Authorization {
 private:
-    string key = "f7f9c01bd1229a17de6d9a9a5815b61cb0b6459f5ebd5cbfa3361a1e40048803";
+    //string key = "f7f9c01bd1229a17de6d9a9a5815b61cb0b6459f5ebd5cbfa3361a1e40048803";
 
-    string crypt(string data) {
-        string output = data;
-        for (int i = 0; i < data.size(); i++) {
-            output[i] = data[i] ^ key[i % key.size()];
-        }
-        return output;
-    }
+    //string crypt(string data) {
+    //    string output = data;
+    //    for (int i = 0; i < data.size(); i++) {
+    //        output[i] = data[i] ^ key[i % key.size()];
+    //    }
+    //    return output;
+    //}
 
     string getHiddenInput() {
         string input = "";
@@ -57,8 +57,8 @@ public:
         f_log >> log_enc;
         f_pass >> pass_enc;
 
-        string log_real = crypt(log_enc);
-        string pass_real = crypt(pass_enc);
+        string log_real = /*crypt*/(log_enc);
+        string pass_real = /*crypt*/(pass_enc);
 
         cout << "Введите логин: "; cin >> l_user;
         cout << "Введите пароль: "; p_user = getHiddenInput();
@@ -80,8 +80,8 @@ public:
         cout << "Придумайте логин: "; cin >> l_new;
         cout << "Придумайте пароль: "; p_new = getHiddenInput();
 
-        string l_to_save = crypt(l_new);
-        string p_to_save = crypt(p_new);
+        string l_to_save = /*crypt*/(l_new);
+        string p_to_save = /*crypt*/(p_new);
 
         ofstream f_log("login.txt"), f_pass("password.txt");
         f_log << l_to_save;

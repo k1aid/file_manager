@@ -30,7 +30,7 @@ int main()
     while (true) {
         showMenu(currentPath);
         cin >> choice;
-        cin.ignore(); // Убираем Enter из буфера для getline
+        cin.ignore();
 
         if (choice == 0) break;
 
