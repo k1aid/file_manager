@@ -1,15 +1,6 @@
-﻿#include <iostream>
-#include <string>
-#include <vector>
-#include <fstream>
-#include <windows.h>
-#include <iomanip>
-#include <clocale>
-#include "File_System.h"
+﻿#include "File_System.h"
 #include "Function_Manager.h"
 #include "Authorization.h"
-
-using namespace std;
 
 int main() 
 {
