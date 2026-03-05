@@ -1,84 +1,79 @@
-﻿
-#include <iostream>
-#include <fstream>
+﻿#include <iostream>
 #include <string>
-#include "functions.h"
+#include <vector>
+#include <fstream>
+#include <windows.h>
+#include <iomanip>
+#include <clocale>
+#include "File_System.h"
+#include "Function_Manager.h"
+#include "Authorization.h"
 
 using namespace std;
 
-int main() 
-{
+int main() {
     setlocale(LC_ALL, "");
 
+
+    Authorization vhod;
+    while (vhod.Run() != 1); // Цикл пока не войдем успешно
+
     FileManager fm;
+    char buf[MAX_PATH];
+    GetCurrentDirectoryA(MAX_PATH, buf);
+    string currentPath = buf;
+
     int choice;
-    string path1, path2;
-    menu vhod;
+    string p1, p2;
 
+    while (true) {
+        showMenu(currentPath);
+        cin >> choice;
+        cin.ignore(); // Убираем Enter из буфера для getline
 
-    vhod.RunMenu();
+        if (choice == 0) break;
 
-        while (true)
-        {
-            showMenu();
-            cin >> choice;
-            cin.ignore();
-
-            if (choice == 0) break;
-
-            switch (choice)
-            {
-            case 1:
-                cout << "Введите путь (например, . или C:\\): "; getline(cin, path1);
-                fm.list(path1);
-                break;
-            case 2:
-                cout << "Путь и имя новой папки: "; getline(cin, path1);
-                fm.makeDir(path1);
-                break;
-            case 3:
-                cout << "Путь и имя нового файла: "; getline(cin, path1);
-                fm.makeFile(path1);
-                break;
-            case 4:
-                cout << "Что удалить?: "; getline(cin, path1);
-                fm.remove(path1);
-                break;
-            case 5:
-                cout << "Старый путь: "; getline(cin, path1);
-                cout << "Новый путь: "; getline(cin, path2);
-                MoveFileA(path1.c_str(), path2.c_str());
-                break;
-            case 6:
-                cout << "Что копируем: "; getline(cin, path1);
-                cout << "Куда копируем: "; getline(cin, path2);
-                CopyFileA(path1.c_str(), path2.c_str(), FALSE);
-                break;
-            case 7:
-                cout << "Где искать (папка): "; getline(cin, path1);
-                cout << "Маска (напр. *.cpp): "; getline(cin, path2);
-                fm.search(path1, path2);
-                break;
-            case 8:
-            {
-                cout << "Путь к объекту: "; getline(cin, path1);
-                DWORD attr = GetFileAttributesA(path1.c_str());
-                if (attr & FILE_ATTRIBUTE_DIRECTORY)
-                {
-                    DirectoryItem d(path1);
-                    cout << "Размер папки рекурсивно: " << d.getSize() << " байт.\n";
-                }
-                else
-                {
-                    FileItem f(path1);
-                    cout << "Размер файла: " << f.getSize() << " байт.\n";
-                }
-                break;
+        switch (choice) {
+        case 1: fm.list(currentPath); break;
+        case 2:
+            cout << "Имя папки или '..': "; getline(cin, p1);
+            if (SetCurrentDirectoryA(p1.c_str())) {
+                GetCurrentDirectoryA(MAX_PATH, buf);
+                currentPath = buf;
             }
-            default:
-                cout << "Неверный выбор!\n";
+            else cout << "Ошибка пути!\n";
+            break;
+        case 3: cout << "Имя папки: "; getline(cin, p1); fm.makeDir(p1); break;
+        case 4: cout << "Имя файла: "; getline(cin, p1); fm.makeFile(p1); break;
+        case 5: cout << "Имя для удаления: "; getline(cin, p1); fm.remove(p1); break;
+        case 6:
+            cout << "Старое имя: "; getline(cin, p1);
+            cout << "Новое имя: "; getline(cin, p2);
+            MoveFileA(p1.c_str(), p2.c_str());
+            break;
+        case 7:
+            cout << "Маска (напр. *.txt): "; getline(cin, p1);
+            fm.search(currentPath, p1);
+            break;
+        case 8:
+            cout << "Объект: "; getline(cin, p1);
+            {
+                DWORD attr = GetFileAttributesA(p1.c_str());
+                if (attr != INVALID_FILE_ATTRIBUTES) {
+                    if (attr & FILE_ATTRIBUTE_DIRECTORY) {
+                        DirectoryItem d(p1);
+                        cout << "Размер папки: " << d.getSize() << " байт.\n";
+                    }
+                    else {
+                        FileItem f(p1);
+                        cout << "Размер файла: " << f.getSize() << " байт.\n";
+                    }
+                }
             }
+            break;
         }
+        cout << "\nНажмите Enter..."; cin.get();
+    }
 
     return 0;
 }
