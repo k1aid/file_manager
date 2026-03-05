@@ -10,10 +10,8 @@ using namespace std;
 
 class Authorization {
 private:
-    // Секретный ключ для XOR-шифрования
     string key = "f7f9c01bd1229a17de6d9a9a5815b61cb0b6459f5ebd5cbfa3361a1e40048803";
 
-    // Внутренний метод для шифрования данных в файле
     string crypt(string data) {
         string output = data;
         for (int i = 0; i < data.size(); i++) {
@@ -22,23 +20,22 @@ private:
         return output;
     }
 
-    // Внутренний метод для ввода пароля "звездочками"
     string getHiddenInput() {
         string input = "";
         char ch;
         while (true) {
-            ch = _getch(); // Читаем символ без эха в консоль
-            if (ch == 13) { // Клавиша Enter
+            ch = _getch();
+            if (ch == 13) { 
                 cout << endl;
                 break;
             }
-            if (ch == 8) { // Клавиша Backspace
+            if (ch == 8) { 
                 if (input.length() > 0) {
                     input.pop_back();
-                    cout << "\b \b"; // Стираем звездочку с экрана
+                    cout << "\b \b"; 
                 }
             }
-            else if (ch >= 32) { // Печатаемые символы
+            else if (ch >= 32) {
                 input += ch;
                 cout << "*";
             }
@@ -47,7 +44,6 @@ private:
     }
 
 public:
-    // Метод для входа в систему
     bool Entrance() {
         string log_enc, pass_enc, l_user, p_user;
         ifstream f_log("login.txt"), f_pass("password.txt");
@@ -61,7 +57,6 @@ public:
         f_log >> log_enc;
         f_pass >> pass_enc;
 
-        // Расшифровываем эталонные данные из файлов
         string log_real = crypt(log_enc);
         string pass_real = crypt(pass_enc);
 
@@ -80,13 +75,11 @@ public:
         }
     }
 
-    // Метод для регистрации нового пользователя
     void Sign_up() {
         string l_new, p_new;
         cout << "Придумайте логин: "; cin >> l_new;
         cout << "Придумайте пароль: "; p_new = getHiddenInput();
 
-        // Шифруем перед записью
         string l_to_save = crypt(l_new);
         string p_to_save = crypt(p_new);
 
@@ -98,22 +91,21 @@ public:
         Sleep(2000);
     }
 
-    // То самое RunMenu, которое управляет процессом
     int Run() {
         while (true) {
             system("cls");
             cout << "1. Вход\n2. Регистрация\nВыберите пункт: ";
 
             int punkt;
-            if (!(cin >> punkt)) { // Защита от букв
+            if (!(cin >> punkt)) {
                 cin.clear();
                 cin.ignore(10000, '\n');
                 continue;
             }
-            cin.ignore(10000, '\n'); // Очистка после ввода цифры
+            cin.ignore(10000, '\n');
 
             if (punkt == 1) {
-                if (Entrance()) return 1; // Возвращаем 1, чтобы пустить в менеджер
+                if (Entrance()) return 1;
             }
             else if (punkt == 2) {
                 Sign_up();

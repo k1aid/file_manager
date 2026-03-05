@@ -11,12 +11,13 @@
 
 using namespace std;
 
-int main() {
+int main() 
+{
     setlocale(LC_ALL, "");
 
 
     Authorization vhod;
-    while (vhod.Run() != 1); // Цикл пока не войдем успешно
+    while (vhod.Run() != 1);
 
     FileManager fm;
     char buf[MAX_PATH];
@@ -33,11 +34,13 @@ int main() {
 
         if (choice == 0) break;
 
-        switch (choice) {
+        switch (choice) 
+        {
         case 1: fm.list(currentPath); break;
         case 2:
             cout << "Имя папки или '..': "; getline(cin, p1);
-            if (SetCurrentDirectoryA(p1.c_str())) {
+            if (SetCurrentDirectoryA(p1.c_str())) 
+            {
                 GetCurrentDirectoryA(MAX_PATH, buf);
                 currentPath = buf;
             }
